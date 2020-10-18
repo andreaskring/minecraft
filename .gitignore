@@ -1,5 +1,6 @@
 venv
 .idea
+__pycache__
 credentials.py
 
 eiffel-tower-e1260.schematic
