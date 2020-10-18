@@ -19,3 +19,37 @@ class TestLatticePath(unittest.TestCase):
     def test_dist_is_zero(self):
         self.assertAlmostEqual(0, self.lp.dist(np.reshape(self.r0, (1, 3))))
         self.assertAlmostEqual(0, self.lp.dist(np.reshape(self.r1, (1, 3))))
+
+    def test_box(self):
+        box = np.array(
+            (
+                (-1, -1, -1),
+                (-1, -1, 0),
+                (-1, -1, 1),
+                (-1, 0, -1),
+                (-1, 0, 0),
+                (-1, 0, 1),
+                (-1, 1, -1),
+                (-1, 1, 0),
+                (-1, 1, 1),
+                (0, -1, -1),
+                (0, -1, 0),
+                (0, -1, 1),
+                (0, 0, -1),
+                (0, 0, 1),
+                (0, 1, -1),
+                (0, 1, 0),
+                (0, 1, 1),
+                (1, -1, -1),
+                (1, -1, 0),
+                (1, -1, 1),
+                (1, 0, -1),
+                (1, 0, 0),
+                (1, 0, 1),
+                (1, 1, -1),
+                (1, 1, 0),
+                (1, 1, 1)
+            )
+        )
+
+        self.assertTrue(np.array_equal(box, self.lp.box))

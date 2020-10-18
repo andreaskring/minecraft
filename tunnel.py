@@ -5,50 +5,20 @@ import credentials
 
 
 class LatticePath(object):
-    # Can this be generated smarter?
-    BOX = np.array(
-        (
-            (-1, -1, -1),
-            (-1, -1, 0),
-            (-1, -1, 1),
-            (-1, 0, -1),
-            (-1, 0, 0),
-            (-1, 0, 1),
-            (-1, 1, -1),
-            (-1, 1, 0),
-            (-1, 1, 1),
-            (0, -1, -1),
-            (0, -1, 0),
-            (0, -1, 1),
-            (0, 0, -1),
-            (0, 0, 1),
-            (0, 1, -1),
-            (0, 1, 0),
-            (0, 1, 1),
-            (1, -1, -1),
-            (1, -1, 0),
-            (1, -1, 1),
-            (1, 0, -1),
-            (1, 0, 0),
-            (1, 0, 1),
-            (1, 1, -1),
-            (1, 1, 0),
-            (1, 1, 1)
-        )
-    )
 
     def __init__(self, r_start, r_end):
         self.r_start = r_start
         self.r_end = r_end
         self.r_current = r_start
         self.direction = r_end - r_start
+        self.box = self.generate_box()
 
     def __iter__(self):
         return self
 
     def __next__(self):
         if np.linalg.norm(self.r_end - self.r_current) > 2:
-            r_next_candidates = self.r_current + self.BOX
+            r_next_candidates = self.r_current + self.box
             print(r_next_candidates)
             d = self.dist(r_next_candidates)
             print(d)
@@ -56,15 +26,16 @@ class LatticePath(object):
         else:
             raise StopIteration
 
-    # def generate_box(self):
-    #     b = np.array((), dtype=np.int8)
-    #     for i in range(-1, 2):
-    #         for j in range(-1, 2):
-    #             for k in range(-1, 2):
-    #                 if not (i == 0 and j == 0 and k == 0):
-    #                     a = np.array((i, j, k))
-    #                     b = np.append(b, a)
-    #     return np.reshape(b, (26, 3))
+    @staticmethod
+    def generate_box():
+        b = np.array((), dtype=np.int8)
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                for k in range(-1, 2):
+                    if not (i == 0 and j == 0 and k == 0):
+                        a = np.array((i, j, k))
+                        b = np.append(b, a)
+        return np.reshape(b, (26, 3))
 
     def dist(self, point: np.array):
         """
