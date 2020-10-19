@@ -28,28 +28,31 @@ class LatticePath(object):
 
     @staticmethod
     def generate_box():
-        b = np.array((), dtype=np.int8)
+        box = np.array((), dtype=np.int8)
         for i in range(-1, 2):
             for j in range(-1, 2):
                 for k in range(-1, 2):
                     if not (i == 0 and j == 0 and k == 0):
                         a = np.array((i, j, k))
-                        b = np.append(b, a)
-        return np.reshape(b, (26, 3))
+                        box = np.append(box, a)
+        return np.reshape(box, (26, 3))
 
     def dist(self, point: np.array):
         """
         Distance from point to line defined by r_start and r_end
+        :param point: Array of shape (n, 3)
         """
         return np.linalg.norm(
             np.cross(point - self.r_start, self.direction), axis=1) / \
             np.linalg.norm(self.direction)
 
-    # def filter_directions(self):
-    #     cosv = np.matmul(self.BOX, self.direction)
+    def filter_directions(self):
+        dot_products = np.matmul(self.box, self.direction)
+        return self.box[[True if dp > 0 else False for dp in dot_products]]
 
 
-# lp = LatticePath(np.zeros(3), np.array((5, 0, 0)))
+lp = LatticePath(np.zeros(3), np.array((5, 0, 0)))
+lp.filter_directions()
 # my_iter = iter(lp)
 # next(my_iter)
 

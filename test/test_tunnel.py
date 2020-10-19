@@ -51,5 +51,24 @@ class TestLatticePath(unittest.TestCase):
                 (1, 1, 1)
             )
         )
-
         self.assertTrue(np.array_equal(box, self.lp.box))
+
+    def test_filter_directions(self):
+        lp = tunnel.LatticePath(np.zeros(3), np.array((1, 0, 0)))
+        expected_directions = np.array(
+            (
+                (1, -1, -1),
+                (1, -1, 0),
+                (1, -1, 1),
+                (1, 0, -1),
+                (1, 0, 0),
+                (1, 0, 1),
+                (1, 1, -1),
+                (1, 1, 0),
+                (1, 1, 1)
+            )
+        )
+        self.assertTrue(np.array_equal(
+            expected_directions,
+            lp.filter_directions()
+        ))
