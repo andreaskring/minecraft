@@ -17,12 +17,16 @@ class LatticePath(object):
         return self
 
     def __next__(self):
-        if np.linalg.norm(self.r_end - self.r_current) > 2:
-            r_next_candidates = self.r_current + self.box
-            print(r_next_candidates)
-            d = self.dist(r_next_candidates)
-            print(d)
-            print(len(d))
+        if np.linalg.norm(self.r_end - self.r_current) > 0:
+            # Get directions pointing the "same" way as self.direction
+            r_next_candidates = self.r_current + self.filter_directions()
+            # Get distances to line from all next point candidates
+            dists_to_line = self.dist(r_next_candidates)
+            # Choose the candidate with the shortest distance to the line
+            self.r_current = r_next_candidates[np.argmin(dists_to_line)]
+            # Update the direction
+            self.direction = self.r_end - self.r_current
+            return self.r_current
         else:
             raise StopIteration
 
@@ -43,7 +47,7 @@ class LatticePath(object):
         :param point: Array of shape (n, 3)
         """
         return np.linalg.norm(
-            np.cross(point - self.r_start, self.direction), axis=1) / \
+            np.cross(point - self.r_current, self.direction), axis=1) / \
             np.linalg.norm(self.direction)
 
     def filter_directions(self):
@@ -52,9 +56,9 @@ class LatticePath(object):
 
 
 lp = LatticePath(np.zeros(3), np.array((5, 0, 0)))
-lp.filter_directions()
-# my_iter = iter(lp)
-# next(my_iter)
+my_iter = iter(lp)
+# for n in my_iter:
+#     print(n)
 
 
 # with Client(credentials.hostname, credentials.port) as client:

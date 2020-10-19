@@ -72,3 +72,88 @@ class TestLatticePath(unittest.TestCase):
             expected_directions,
             lp.filter_directions()
         ))
+
+    def test_next_along_100(self):
+        lp = tunnel.LatticePath(np.zeros(3), np.array((3, 0, 0)))
+        lattice_point_iter = iter(lp)
+
+        self.assertTrue(np.array_equal(
+            np.array((1, 0, 0)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((2, 0, 0)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((3, 0, 0)),
+            next(lattice_point_iter)
+        ))
+
+    def test_next_along_110(self):
+        lp = tunnel.LatticePath(np.zeros(3), np.array((3, 3, 0)))
+        lattice_point_iter = iter(lp)
+
+        self.assertTrue(np.array_equal(
+            np.array((1, 1, 0)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((2, 2, 0)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((3, 3, 0)),
+            next(lattice_point_iter)
+        ))
+
+    def test_next_along_101(self):
+        lp = tunnel.LatticePath(np.zeros(3), np.array((3, 0, 3)))
+        lattice_point_iter = iter(lp)
+
+        self.assertTrue(np.array_equal(
+            np.array((1, 0, 1)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((2, 0, 2)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((3, 0, 3)),
+            next(lattice_point_iter)
+        ))
+
+    def test_next_along_111(self):
+        lp = tunnel.LatticePath(np.zeros(3), np.array((3, 3, 3)))
+        lattice_point_iter = iter(lp)
+
+        self.assertTrue(np.array_equal(
+            np.array((1, 1, 1)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((2, 2, 2)),
+            next(lattice_point_iter)
+        ))
+        self.assertTrue(np.array_equal(
+            np.array((3, 3, 3)),
+            next(lattice_point_iter)
+        ))
+
+    # def test_next_along_530(self):
+    #     lp = tunnel.LatticePath(np.zeros(3), np.array((5, 3, 0)))
+    #     lattice_point_iter = iter(lp)
+    #
+    #     self.assertTrue(np.array_equal(
+    #         np.array((1, 0, 0)),
+    #         next(lattice_point_iter)
+    #     ))
+    #     self.assertTrue(np.array_equal(
+    #         np.array((2, 2, 2)),
+    #         next(lattice_point_iter)
+    #     ))
+    #     self.assertTrue(np.array_equal(
+    #         np.array((3, 3, 3)),
+    #         next(lattice_point_iter)
+    #     ))
