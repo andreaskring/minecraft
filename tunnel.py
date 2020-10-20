@@ -24,8 +24,6 @@ class LatticePath(object):
             dists_to_line = self.dist(r_next_candidates)
             # Choose the candidate with the shortest distance to the line
             self.r_current = r_next_candidates[np.argmin(dists_to_line)]
-            # Update the direction
-            self.direction = self.r_end - self.r_current
             return self.r_current
         else:
             raise StopIteration
@@ -47,18 +45,23 @@ class LatticePath(object):
         :param point: Array of shape (n, 3)
         """
         return np.linalg.norm(
-            np.cross(point - self.r_current, self.direction), axis=1) / \
+            np.cross(point - self.r_start, self.direction), axis=1) / \
             np.linalg.norm(self.direction)
 
     def filter_directions(self):
+        """
+        Get directions pointing the "same" way as self.direction
+        """
         dot_products = np.matmul(self.box, self.direction)
         return self.box[[True if dp > 0 else False for dp in dot_products]]
 
 
-lp = LatticePath(np.zeros(3), np.array((5, 0, 0)))
+lp = LatticePath(np.zeros(3), np.array((3, 0, 0)))
 my_iter = iter(lp)
-# for n in my_iter:
-#     print(n)
+# next(my_iter)
+# next(my_iter)
+# next(my_iter)
+# next(my_iter)
 
 
 # with Client(credentials.hostname, credentials.port) as client:
