@@ -3,6 +3,49 @@ import numpy as np
 import tunnel
 
 
+class TestGenerateBox(unittest.TestCase):
+
+    def test_n_is_1_origin_included(self):
+        box = tunnel.generate_box(1)
+        # Assert a random sample
+        self.assertTrue(np.array_equal(np.array((-1, -1, -1)), box[0]))
+        self.assertTrue(np.array_equal(np.array((-1, 1, 1)), box[8]))
+        self.assertTrue(np.array_equal(np.array((0, 0, -1)), box[12]))
+        self.assertTrue(np.array_equal(np.array((0, 0, 0)), box[13]))
+        self.assertTrue(np.array_equal(np.array((1, 0, -1)), box[21]))
+        self.assertTrue(np.array_equal(np.array((1, 1, 1)), box[26]))
+
+    def test_n_is_1_origin_not_included(self):
+        box = tunnel.generate_box(1, include_origin=False)
+        # Assert a random sample
+        self.assertTrue(np.array_equal(np.array((-1, -1, -1)), box[0]))
+        self.assertTrue(np.array_equal(np.array((-1, 1, 1)), box[8]))
+        self.assertTrue(np.array_equal(np.array((0, 0, -1)), box[12]))
+        self.assertTrue(np.array_equal(np.array((1, 0, -1)), box[20]))
+        self.assertTrue(np.array_equal(np.array((1, 1, 1)), box[25]))
+
+    def test_n_is_2_origin_included(self):
+        box = tunnel.generate_box(2)
+        # Assert a random sample
+        self.assertTrue(np.array_equal(np.array((-2, -2, -2)), box[0]))
+        self.assertTrue(np.array_equal(np.array((-1, -1, 0)), box[32]))
+        self.assertTrue(np.array_equal(np.array((0, 0, 0)), box[62]))
+        self.assertTrue(np.array_equal(np.array((0, 2, -2)), box[70]))
+        self.assertTrue(np.array_equal(np.array((2, -2, 1)), box[103]))
+        self.assertTrue(np.array_equal(np.array((2, 1, 1)), box[118]))
+        self.assertTrue(np.array_equal(np.array((2, 2, 2)), box[124]))
+
+    def test_n_is_2_origin_not_included(self):
+        box = tunnel.generate_box(2, include_origin=False)
+        # Assert a random sample
+        self.assertTrue(np.array_equal(np.array((-2, -2, -2)), box[0]))
+        self.assertTrue(np.array_equal(np.array((-1, -1, 0)), box[32]))
+        self.assertTrue(np.array_equal(np.array((0, 2, -2)), box[69]))
+        self.assertTrue(np.array_equal(np.array((2, -2, 1)), box[102]))
+        self.assertTrue(np.array_equal(np.array((2, 1, 1)), box[117]))
+        self.assertTrue(np.array_equal(np.array((2, 2, 2)), box[123]))
+
+
 class TestLatticePath(unittest.TestCase):
 
     def setUp(self) -> None:

@@ -4,6 +4,26 @@ from mcipc.rcon import Client
 import credentials
 
 
+def generate_box(n: int, include_origin=True) -> np.array:
+    """
+    Generate an array og simple cubic lattice vectors
+    :param n: half of the box size in the x-, y- and z-direction
+    :param include_origin: weather the origin is included or not
+    """
+    box = np.array((), dtype=np.int8)
+    for i in range(-n, n + 1):
+        for j in range(-n, n + 1):
+            for k in range(-n, n + 1):
+                if not (i == 0 and j == 0 and k == 0 and not include_origin):
+                    box = np.append(box, np.array((i, j, k)))
+
+    if include_origin:
+        shape = ((2 * n + 1) ** 3, 3)
+    else:
+        shape = ((2 * n + 1) ** 3 - 1, 3)
+    return np.reshape(box, shape)
+
+
 class LatticePath(object):
 
     def __init__(self, r_start, r_end):
@@ -11,7 +31,7 @@ class LatticePath(object):
         self.r_end = r_end
         self.r_current = r_start
         self.direction = r_end - r_start
-        self.box = self.generate_box()
+        self.box = generate_box(1, include_origin=False)
 
     def __iter__(self):
         return self
@@ -27,17 +47,6 @@ class LatticePath(object):
             return self.r_current
         else:
             raise StopIteration
-
-    @staticmethod
-    def generate_box():
-        box = np.array((), dtype=np.int8)
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                for k in range(-1, 2):
-                    if not (i == 0 and j == 0 and k == 0):
-                        a = np.array((i, j, k))
-                        box = np.append(box, a)
-        return np.reshape(box, (26, 3))
 
     def dist(self, point: np.array):
         """
@@ -56,24 +65,25 @@ class LatticePath(object):
         return self.box[[True if dp > 0 else False for dp in dot_products]]
 
 
-lp = LatticePath(np.zeros(3), np.array((3, 0, 0)))
-my_iter = iter(lp)
-# next(my_iter)
-# next(my_iter)
-# next(my_iter)
-# next(my_iter)
+def hemisphere(radius: float) -> np.array:
+    box = generate_box(int(radius))
+    return box[[True if r[1] >= 0 and np.linalg.norm(r) <= radius else False
+                for r in box]]
 
 
-# with Client(credentials.hostname, credentials.port) as client:
-#     client.login(credentials.password)
-#     x_offset, y_offset, z_offset = -220, 68, 204
-#     r = 20.5
-#     for y in range(int(r)):
-#         for x in range(-(int(r) + 1), int(r) + 2):
-#             for z in range(-(int(r) + 1), int(r) + 2):
-#                 if dist(x, y, z) <= r:
-#                     resp = client.run(
-#                         'setblock',
-#                         f'{x_offset + x} {y_offset + y} {z_offset + z} white_concrete'
-#                     )
-#                     sleep(0.01)
+start = np.array((-147, 59, 194))
+end = np.array((-218, 59, 205))
+
+lp = LatticePath(start, end)
+lattice_iter = iter(lp)
+H = hemisphere(2.5)
+with Client(credentials.hostname, credentials.port) as client:
+    client.login(credentials.password)
+    for point in lattice_iter:
+        for h in H:
+            print(f'{point[0] + h[0]} {point[1] + h[1]} {point[2] + h[2]}')
+            client.run(
+                'setblock',
+                f'{point[0] + h[0]} {point[1] + h[1]} {point[2] + h[2]} air'
+            )
+        sleep(1.5)
