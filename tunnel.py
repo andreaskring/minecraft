@@ -6,7 +6,7 @@ import credentials
 
 def generate_box(n: int, include_origin=True) -> np.array:
     """
-    Generate an array og simple cubic lattice vectors
+    Generate an array of simple cubic lattice vectors
     :param n: half of the box size in the x-, y- and z-direction
     :param include_origin: weather the origin is included or not
     """
@@ -71,19 +71,19 @@ def hemisphere(radius: float) -> np.array:
                 for r in box]]
 
 
-start = np.array((-147, 59, 194))
-end = np.array((-218, 59, 205))
+if __name__ == '__main__':
+    start = np.array((-147, 59, 194))
+    end = np.array((-218, 59, 205))
 
-lp = LatticePath(start, end)
-lattice_iter = iter(lp)
-H = hemisphere(2.5)
-with Client(credentials.hostname, credentials.port) as client:
-    client.login(credentials.password)
-    for point in lattice_iter:
-        for h in H:
-            print(f'{point[0] + h[0]} {point[1] + h[1]} {point[2] + h[2]}')
-            client.run(
-                'setblock',
-                f'{point[0] + h[0]} {point[1] + h[1]} {point[2] + h[2]} air'
-            )
-        sleep(1.5)
+    lp = LatticePath(start, end)
+    lattice_iter = iter(lp)
+    H = hemisphere(2.5)
+    with Client(credentials.hostname, credentials.port) as client:
+        client.login(credentials.password)
+        for point in lattice_iter:
+            for h in H:
+                client.run(
+                    'setblock',
+                    f'{point[0] + h[0]} {point[1] + h[1]} {point[2] + h[2]} air'
+                )
+            sleep(1.5)

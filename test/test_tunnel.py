@@ -14,6 +14,7 @@ class TestGenerateBox(unittest.TestCase):
         self.assertTrue(np.array_equal(np.array((0, 0, 0)), box[13]))
         self.assertTrue(np.array_equal(np.array((1, 0, -1)), box[21]))
         self.assertTrue(np.array_equal(np.array((1, 1, 1)), box[26]))
+        self.assertEqual((27, 3), box.shape)
 
     def test_n_is_1_origin_not_included(self):
         box = tunnel.generate_box(1, include_origin=False)
@@ -23,6 +24,7 @@ class TestGenerateBox(unittest.TestCase):
         self.assertTrue(np.array_equal(np.array((0, 0, -1)), box[12]))
         self.assertTrue(np.array_equal(np.array((1, 0, -1)), box[20]))
         self.assertTrue(np.array_equal(np.array((1, 1, 1)), box[25]))
+        self.assertEqual((26, 3), box.shape)
 
     def test_n_is_2_origin_included(self):
         box = tunnel.generate_box(2)
@@ -34,6 +36,7 @@ class TestGenerateBox(unittest.TestCase):
         self.assertTrue(np.array_equal(np.array((2, -2, 1)), box[103]))
         self.assertTrue(np.array_equal(np.array((2, 1, 1)), box[118]))
         self.assertTrue(np.array_equal(np.array((2, 2, 2)), box[124]))
+        self.assertEqual((125, 3), box.shape)
 
     def test_n_is_2_origin_not_included(self):
         box = tunnel.generate_box(2, include_origin=False)
@@ -44,6 +47,7 @@ class TestGenerateBox(unittest.TestCase):
         self.assertTrue(np.array_equal(np.array((2, -2, 1)), box[102]))
         self.assertTrue(np.array_equal(np.array((2, 1, 1)), box[117]))
         self.assertTrue(np.array_equal(np.array((2, 2, 2)), box[123]))
+        self.assertEqual((124, 3), box.shape)
 
 
 class TestLatticePath(unittest.TestCase):
